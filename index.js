@@ -9,31 +9,35 @@ const path = require('path');
         let pageLink = process.argv[2];
         let region = process.argv[3];
 
-
         const browser = await puppeteer.launch({
             headless: false
         })
         const page = await browser.newPage()
         await page.goto(pageLink)
 
-        await page.waitForSelector('.Content_remove__qdwv0')
+        await page.setViewport({
+            width: 1100,
+            height: 800
+        })
+
+        await page.waitForSelector('.Tooltip_closeIcon__skwl0')
 
         await page.evaluate(() => {
-            if(document.querySelector('.Content_remove__qdwv0')) {
+            if(document.querySelector('.Tooltip_closeIcon__skwl0')) {
 
-                document.querySelector('.Content_remove__qdwv0').click()
+                document.querySelector('.Tooltip_closeIcon__skwl0').click()
 
-                if(document.querySelector('.BurgerButton_burger__k87p1')) {
-                    document.querySelector('.BurgerButton_burger__k87p1').click()
+                if(document.querySelector('.Region_region__6OUBn')) {
+                    document.querySelector('.Region_region__6OUBn').click()
                 }
             }
         })
 
-        await page.waitForSelector('.FeatureAddressSettingMobile_text__R1icU')
+        //await page.waitForSelector('.UiRegionListBase_list__cH0fK')
 
-        await page.evaluate(() => {
-            document.querySelector('.FeatureAddressSettingMobile_text__R1icU').click()
-        })
+        //await page.evaluate(() => {
+            //document.querySelector('.FeatureAddressSettingMobile_text__R1icU').click()
+        //})
 
         await page.waitForSelector('.UiRegionListBase_list__cH0fK')
 
@@ -52,7 +56,7 @@ const path = require('path');
             return true
         }, region)
 
-        await page.waitForSelector('.ProductPage_informationBlock__vDYCH');
+        await page.waitForSelector('.ExperimentalProducts_heading__yGZ4t');
 
         const productFileContent = await page.evaluate(() => {
 
@@ -125,24 +129,26 @@ reviewCount=${productFileContent.reviewCount}`;
         await page.evaluate(() => {
 
             window.scrollTo(0, document.body.scrollHeight);
+        })
+
+        await page.waitForSelector('.ProductCarousel_header__v3QzP')
+
+        await page.evaluate(() => {
+
+            if(document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM')) {
+                document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM').remove()
+            }
 
             if(document.querySelector('.OutlineButton_color_primary___NYOX')) {
                 document.querySelector('.OutlineButton_color_primary___NYOX').click()
             }
         })
 
-        await page.waitForSelector('.ProductCarousel_header__v3QzP')
+        //await page.waitForSelector('.UiFooterBottomBase_footerBottom__fF9wh')
+        //await page.waitForSelector('.UiFooterBottomBase_copyright__Hux2q')
 
-        await page.waitForSelector('.ProductPage_marketingText__a7Nce')
-
-        await page.evaluate(() => {
-
-            window.scrollTo(0, document.body.scrollHeight)
-
-            if(document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM')) {
-                document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM').remove()
-            }
-        })
+        //const closedCookieButton = await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
+        //await closedCookieButton.evaluate(btn => btn.click());
 
         await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
 

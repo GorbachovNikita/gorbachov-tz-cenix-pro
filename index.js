@@ -106,6 +106,8 @@ const path = require('path');
                 reviewCount = undefined
             }
 
+            window.scrollTo(0, document.body.scrollHeight)
+
             return {
                 price: price,
                 priceOld: priceOld,
@@ -131,16 +133,13 @@ reviewCount=${productFileContent.reviewCount}`;
 
         fs.writeFile(path.resolve(__dirname, 'results', dirName, 'product.txt'), fileText, (err) => {if(err) {throw err;}});
 
-        await page.evaluate(() => {
-
-            window.scrollTo(0, document.body.scrollHeight);
-        })
-
         await page.waitForSelector('.ProductCarousel_header__v3QzP')
             .then(() => console.log('"ProductCarousel_header__v3QzP" найден'))
             .catch(e => console.log('Ошибки: '+e))
 
         await page.evaluate(() => {
+
+            window.scrollTo(0, document.body.scrollHeight)
 
             if(document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM')) {
                 document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM').remove()

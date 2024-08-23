@@ -1,0 +1,14 @@
+{
+  "name": "gorbachov-tz-cenix-pro",
+  "version": "1.0.0",
+  "description": "22.08.2024",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^23.1.1"
+  }
+}

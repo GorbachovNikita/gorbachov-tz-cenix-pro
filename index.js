@@ -16,17 +16,26 @@ const path = require('path');
         const page = await browser.newPage()
         await page.goto(pageLink)
 
+        await page.waitForSelector('.Content_remove__qdwv0')
 
-        const closedOpenPageMenuButton = await page.waitForSelector('.Content_remove__qdwv0')
-        await closedOpenPageMenuButton.evaluate(btn => btn.click());
+        await page.evaluate(() => {
+            if(document.querySelector('.Content_remove__qdwv0')) {
 
-        const buttonMenu = await page.waitForSelector('.BurgerButton_burger__k87p1');
-        await buttonMenu.evaluate(btn => btn.click());
+                document.querySelector('.Content_remove__qdwv0').click()
 
-        const regionMenu = await page.waitForSelector('.FeatureAddressSettingMobile_text__R1icU');
-        await regionMenu.evaluate(btn => btn.click());
+                if(document.querySelector('.BurgerButton_burger__k87p1')) {
+                    document.querySelector('.BurgerButton_burger__k87p1').click()
+                }
+            }
+        })
 
-        await page.waitForSelector('.UiRegionListBase_list__cH0fK');
+        await page.waitForSelector('.FeatureAddressSettingMobile_text__R1icU')
+
+        await page.evaluate(() => {
+            document.querySelector('.FeatureAddressSettingMobile_text__R1icU').click()
+        })
+
+        await page.waitForSelector('.UiRegionListBase_list__cH0fK')
 
         await page.evaluate((region) => {
             const elements = document.querySelectorAll('.UiRegionListBase_bold__ezwq4');
@@ -43,25 +52,63 @@ const path = require('path');
             return true
         }, region)
 
+        await page.waitForSelector('.ProductPage_informationBlock__vDYCH');
 
-        await page.waitForSelector('.Price_role_discount__l_tpE');
+        const productFileContent = await page.evaluate(() => {
 
-        const priceElem = await page.waitForSelector('.Price_role_discount__l_tpE');
-        const price = await priceElem.evaluate(el => el.textContent.split(' ')[0].replace(',', '.'));
+            let price, priceOld, rating, reviewCount;
 
-        const priceOldElem = await page.waitForSelector('.Price_role_old__r1uT1');
-        const priceOld = await priceOldElem.evaluate(el => el.textContent.split(' ')[0].replace(',', '.'));
+            let block = document.querySelector('.ProductPage_informationBlock__vDYCH')
 
-        const ratingElem = await page.waitForSelector('.ActionsRow_stars__EKt42');
-        const rating = await ratingElem.evaluate(el => el.textContent);
+            if(block) {
 
-        const reviewCountElem = await page.waitForSelector('.ActionsRow_reviews__AfSj_'); // select the element
-        const reviewCount = await reviewCountElem.evaluate(el => el.textContent.split(' ')[0]);
+                if(block.querySelector('.Price_role_regular__X6X4D')) {
 
-        let fileText = `price=${price}
-priceOld=${priceOld}
-rating=${rating}
-reviewCount=${reviewCount}`;
+                    price = block.querySelector('.Price_role_regular__X6X4D').textContent.split(' ')[0];
+                    priceOld = undefined
+                }else {
+
+                    if(block.querySelector('.Price_role_discount__l_tpE')) {
+
+                        price = block.querySelector('.Price_role_discount__l_tpE').textContent.split(' ')[0].replace(',', '.');
+                    }else {
+                        price = undefined
+                    }
+
+                    if(block.querySelector('.Price_role_old__r1uT1')) {
+                        priceOld = block.querySelector('.Price_role_old__r1uT1').textContent.split(' ')[0].replace(',', '.');
+                    }else {
+                        priceOld = undefined
+                    }
+                }
+            }
+
+            if(document.querySelector('.ActionsRow_stars__EKt42')) {
+
+                rating = document.querySelector('.ActionsRow_stars__EKt42').textContent;
+            }else {
+                rating = undefined
+            }
+
+            if(document.querySelector('.ActionsRow_reviews__AfSj_')) {
+
+                reviewCount = document.querySelector('.ActionsRow_reviews__AfSj_').textContent.split(' ')[0]
+            }else {
+                reviewCount = undefined
+            }
+
+            return {
+                price: price,
+                priceOld: priceOld,
+                rating: rating,
+                reviewCount: reviewCount,
+            }
+        })
+
+        let fileText = `price=${productFileContent.price}
+priceOld=${productFileContent.priceOld}
+rating=${productFileContent.rating}
+reviewCount=${productFileContent.reviewCount}`;
 
         let dirName = region
 
@@ -75,18 +122,29 @@ reviewCount=${reviewCount}`;
 
         fs.writeFile(path.resolve(__dirname, 'results', dirName, 'product.txt'), fileText, (err) => {if(err) {throw err;}});
 
+        await page.evaluate(() => {
 
-        const closedCookieButton = await page.waitForSelector('.OutlineButton_color_primary___NYOX')
-        await closedCookieButton.evaluate(btn => btn.click());
+            window.scrollTo(0, document.body.scrollHeight);
+
+            if(document.querySelector('.OutlineButton_color_primary___NYOX')) {
+                document.querySelector('.OutlineButton_color_primary___NYOX').click()
+            }
+        })
+
+        await page.waitForSelector('.ProductCarousel_header__v3QzP')
+
+        await page.waitForSelector('.ProductPage_marketingText__a7Nce')
 
         await page.evaluate(() => {
-            window.scrollTo(0, document.body.scrollHeight);
-        });
+
+            window.scrollTo(0, document.body.scrollHeight)
+
+            if(document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM')) {
+                document.querySelector('.UiHeaderHorizontalBase_headerPortal__hNBbM').remove()
+            }
+        })
 
         await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
-
-        const el = await page.waitForSelector('.UiHeaderHorizontalBase_headerPortal__hNBbM');
-        await el.evaluate(el => el.remove());
 
         await page.setViewport({
             width: 1200,

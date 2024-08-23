@@ -33,12 +33,6 @@ const path = require('path');
             }
         })
 
-        //await page.waitForSelector('.UiRegionListBase_list__cH0fK')
-
-        //await page.evaluate(() => {
-            //document.querySelector('.FeatureAddressSettingMobile_text__R1icU').click()
-        //})
-
         await page.waitForSelector('.UiRegionListBase_list__cH0fK')
 
         await page.evaluate((region) => {
@@ -56,7 +50,6 @@ const path = require('path');
             return true
         }, region)
 
-        //await page.waitForSelector('.ExperimentalProducts_heading__yGZ4t').then();
         await page.waitForSelector('.ProductPage_informationBlock__vDYCH').then();
 
         const productFileContent = await page.evaluate(() => {
@@ -149,12 +142,6 @@ reviewCount=${productFileContent.reviewCount}`;
                 document.querySelector('.OutlineButton_color_primary___NYOX').click()
             }
         })
-
-        //await page.waitForSelector('.UiFooterBottomBase_footerBottom__fF9wh')
-        //await page.waitForSelector('.UiFooterBottomBase_copyright__Hux2q')
-
-        //const closedCookieButton = await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
-        //await closedCookieButton.evaluate(btn => btn.click());
 
         await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9').then();
 

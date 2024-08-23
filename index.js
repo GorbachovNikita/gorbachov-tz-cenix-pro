@@ -21,6 +21,8 @@ const path = require('path');
         })
 
         await page.waitForSelector('.Tooltip_closeIcon__skwl0')
+            .then(() => console.log('"Tooltip_closeIcon__skwl0" найден'))
+            .catch(e => console.log('Ошибки: '+e))
 
         await page.evaluate(() => {
             if(document.querySelector('.Tooltip_closeIcon__skwl0')) {
@@ -34,6 +36,8 @@ const path = require('path');
         })
 
         await page.waitForSelector('.UiRegionListBase_list__cH0fK')
+            .then(() => console.log('"UiRegionListBase_list__cH0fK" найден'))
+            .catch(e => console.log('Ошибки: '+e))
 
         await page.evaluate((region) => {
             const elements = document.querySelectorAll('.UiRegionListBase_bold__ezwq4');
@@ -50,7 +54,9 @@ const path = require('path');
             return true
         }, region)
 
-        await page.waitForSelector('.ProductPage_informationBlock__vDYCH').then();
+        await page.waitForSelector('.ProductPage_informationBlock__vDYCH')
+            .then(() => console.log('"ProductPage_informationBlock__vDYCH" найден'))
+            .catch(e => console.log('Ошибки: '+e))
 
         const productFileContent = await page.evaluate(() => {
 
@@ -130,7 +136,9 @@ reviewCount=${productFileContent.reviewCount}`;
             window.scrollTo(0, document.body.scrollHeight);
         })
 
-        await page.waitForSelector('.ProductCarousel_header__v3QzP').then()
+        await page.waitForSelector('.ProductCarousel_header__v3QzP')
+            .then(() => console.log('"ProductCarousel_header__v3QzP" найден'))
+            .catch(e => console.log('Ошибки: '+e))
 
         await page.evaluate(() => {
 
@@ -143,7 +151,18 @@ reviewCount=${productFileContent.reviewCount}`;
             }
         })
 
-        await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9').then();
+        await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
+            .then(() => console.log('"UiFooterHorizontalBase_footer__Pysr9" найден'))
+            .catch(e => console.log('Ошибки: '+e))
+
+        await page.evaluate(() => {
+            if(document.querySelector('.UiFooterHorizontalBase_footer__Pysr9')) {
+                document.querySelector('.UiFooterHorizontalBase_footer__Pysr9').click()
+                console.log('footer прогрузился')
+            }else {
+                console.log('footer не прогрузился')
+            }
+        })
 
         await page.setViewport({
             width: 1200,

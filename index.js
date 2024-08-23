@@ -56,47 +56,53 @@ const path = require('path');
             return true
         }, region)
 
-        await page.waitForSelector('.ExperimentalProducts_heading__yGZ4t');
+        //await page.waitForSelector('.ExperimentalProducts_heading__yGZ4t').then();
+        await page.waitForSelector('.ProductPage_informationBlock__vDYCH').then();
 
         const productFileContent = await page.evaluate(() => {
 
             let price, priceOld, rating, reviewCount;
 
+            let re = new RegExp(String.fromCharCode(160), "g")
             let block = document.querySelector('.ProductPage_informationBlock__vDYCH')
 
             if(block) {
 
                 if(block.querySelector('.Price_role_regular__X6X4D')) {
 
-                    price = block.querySelector('.Price_role_regular__X6X4D').textContent.split(' ')[0];
+                    price = block.querySelector('.Price_role_regular__X6X4D').textContent.split(' ')[0].replace(',', '.').replace(re, ' ');
                     priceOld = undefined
                 }else {
 
                     if(block.querySelector('.Price_role_discount__l_tpE')) {
 
-                        price = block.querySelector('.Price_role_discount__l_tpE').textContent.split(' ')[0].replace(',', '.');
+                        price = block.querySelector('.Price_role_discount__l_tpE').textContent.split(' ')[0].replace(',', '.').replace(re, ' ');
                     }else {
                         price = undefined
                     }
 
                     if(block.querySelector('.Price_role_old__r1uT1')) {
-                        priceOld = block.querySelector('.Price_role_old__r1uT1').textContent.split(' ')[0].replace(',', '.');
+                        priceOld = block.querySelector('.Price_role_old__r1uT1').textContent.split(' ')[0].replace(',', '.').replace(re, ' ');
                     }else {
                         priceOld = undefined
                     }
                 }
+            }else {
+
+                price = undefined
+                priceOld = undefined
             }
 
             if(document.querySelector('.ActionsRow_stars__EKt42')) {
 
-                rating = document.querySelector('.ActionsRow_stars__EKt42').textContent;
+                rating = document.querySelector('.ActionsRow_stars__EKt42').textContent.replace(re, ' ');
             }else {
                 rating = undefined
             }
 
             if(document.querySelector('.ActionsRow_reviews__AfSj_')) {
 
-                reviewCount = document.querySelector('.ActionsRow_reviews__AfSj_').textContent.split(' ')[0]
+                reviewCount = document.querySelector('.ActionsRow_reviews__AfSj_').textContent.split(' ')[0].replace(re, ' ')
             }else {
                 reviewCount = undefined
             }
@@ -131,7 +137,7 @@ reviewCount=${productFileContent.reviewCount}`;
             window.scrollTo(0, document.body.scrollHeight);
         })
 
-        await page.waitForSelector('.ProductCarousel_header__v3QzP')
+        await page.waitForSelector('.ProductCarousel_header__v3QzP').then()
 
         await page.evaluate(() => {
 
@@ -150,7 +156,7 @@ reviewCount=${productFileContent.reviewCount}`;
         //const closedCookieButton = await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
         //await closedCookieButton.evaluate(btn => btn.click());
 
-        await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9')
+        await page.waitForSelector('.UiFooterHorizontalBase_footer__Pysr9').then();
 
         await page.setViewport({
             width: 1200,
